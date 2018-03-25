@@ -32,6 +32,7 @@ var SaveData = function () {
     this.color = '#000000';
     this.backgroundcolor = '#ffffff';
     this.colorpalette = ['#cccccc', '#99dddd', '#9999dd', '#dd99dd', '#ff9999', '#ffcc99', '#99dd99'];
+    this.itemList.push(new Item('サンプル', 1, 'etc/box'));
 };
 
 var Item = function (name, color, image) {
@@ -89,6 +90,12 @@ function getElementListByClass(className) {
 
 function getStyle(id) {
     return document.getElementById(id).style;
+}
+
+function inputCheck(str) {
+    str = str.replace('<', '');
+    str = str.replace('>', '');
+    return str;
 }
 
 function drow(id, str) {
@@ -170,7 +177,7 @@ function drowItemBox(item, index) {
     str += '<div class="main-item" id="main-item' + index + '" style="background-color:' + color + '"';
     str += ' onclick="pushItem(\'' + index + '\')">';
     str += '<img class="main-item" src="img/' + item.image + '.png">';
-    str += '<div class="main-item-name">' + item.name + '</div>';
+    str += '<div class="main-item-name">' + item.name.replace(',', '<br>') + '</div>';
     str += '</div>';
     return str;
 }
@@ -190,7 +197,8 @@ function drowItemLine(item, index) {
     var str = '';
     str += '<div class="list-item-box"';
     str += ' style="background-color:' + data.colorpalette[item.color] + '">';
-    str += '<img class="list-item-box" src="img/' + item.image + '.png" align="left">' + item.name;
+    str += '<img class="list-item-box" src="img/' + item.image + '.png" align="left">';
+    str += item.name.replace(',', '');
     str += '<span class="list-item-box-date">' + item.date + '</span>';
     str += '</div>';
     return str;
@@ -301,7 +309,7 @@ function cancelItemList() {
 }
 
 function saveItem() {
-    var name = getElement('edit-name').value;
+    var name = inputCheck(getElement('edit-name').value);
     var color = getElementByClass('edit-colorA').children[0].getAttribute('alt');
     var image = getElementByClass('edit-iconA').children[0].getAttribute('alt');
     if (panel == 'Add') {
@@ -316,7 +324,7 @@ function saveItem() {
 }
 
 function saveConfig() {
-    data.title = getElement('config-title').value;
+    data.title = inputCheck(getElement('config-title').value);
     data.color = getElement('config-color').value;
     data.backgroundcolor = getElement('config-backgroundcolor').value;
     data.colorpalette.forEach(function (value, index) {
