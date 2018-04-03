@@ -31,7 +31,9 @@ var SaveData = function () {
     this.itemList = [];
     this.color = '#000000';
     this.backgroundcolor = '#ffffff';
-    this.colorpalette = ['#cccccc', '#99dddd', '#9999dd', '#dd99dd', '#ff9999', '#ffcc99', '#99dd99'];
+    // ▼ 0.9.1 カラーパレット追加
+    this.colorpalette = ['#cccccc', '#99dddd', '#ffcc99', '#99dd99', '#eeee99', '#aaaaee', '#ee9999', '#ffaacc', '#ccee99', '#99ccee'];
+    // ▲ 0.9.1
     this.itemList.push(new Item('サンプル', 1, 'etc/box'));
 };
 
@@ -56,6 +58,14 @@ function load() {
     if (sd == null) {
         sd = new SaveData();
     }
+    // ▼ 0.9.1 カラーパレット追加
+    else if (sd.colorpalette.length < 10) {
+        sd.colorpalette[7] = '#dddd99';
+        sd.colorpalette[8] = '#99ffcc';
+        sd.colorpalette[9] = '#ff99cc';
+        save(sd);
+    }
+    // ▲ 0.9.1
     return sd;
 }
 
@@ -86,6 +96,10 @@ function getElementByClass(className) {
 
 function getElementListByClass(className) {
     return Array.prototype.slice.call(document.getElementsByClassName(className));
+}
+
+function getElementListByTagName(tagName) {
+    return Array.prototype.slice.call(document.getElementsByTagName(tagName));
 }
 
 function getStyle(id) {
@@ -237,6 +251,11 @@ function drowIconList() {
 
 function drowConfig() {
     document.body.style.color = data.color;
+    // ▼ 0.9.1 ボタン文字色変更
+    getElementListByTagName('button').forEach(function (element) {
+        element.style.color = data.color;
+    });
+    // ▲ 0.9.1
     document.body.style.backgroundColor = data.backgroundcolor;
     drowTitle();
 }
@@ -334,6 +353,18 @@ function saveConfig() {
     drowColorList();
     save(data);
 }
+
+// ▼ 0.9.1 配色初期化
+function initColorConfig() {
+    var initData = new SaveData();
+    data.color = initData.color;
+    data.backgroundcolor = initData.backgroundcolor;
+    data.colorpalette.forEach(function (value, index) {
+        data.colorpalette[index] = initData.colorpalette[index];
+    });
+    drowConfigColor();
+}
+// ▲ 0.9.1
 
 function test() {
     alert(getElement('config-color').value);
