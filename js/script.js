@@ -18,7 +18,7 @@ var ICON_LIST = ['food/milk', 'food/yogurt', 'food/cheese', 'food/egg', 'food/fi
     'stationery/note', 'stationery/tape',
     'etc/bag', 'etc/box', 'etc/flower',
 ];
-var PANEL_LIST = ['Main', 'List', 'Edit', 'Config'];
+var PANEL_LIST = ['Main', 'List', 'Edit', 'Config', 'Tutorial'];
 
 // global変数
 var data = null;
@@ -34,14 +34,31 @@ var SaveData = function () {
     // ▼ 0.9.1 カラーパレット追加
     this.colorpalette = ['#cccccc', '#99dddd', '#ffcc99', '#99dd99', '#eeee99', '#aaaaee', '#ee9999', '#ffaacc', '#ccee99', '#99ccee'];
     // ▲ 0.9.1
-    this.itemList.push(new Item('サンプル', 1, 'etc/box'));
+    // ▼ 0.9.2 サンプルデータ追加
+    this.itemList.push(new Item('牛乳', 2, 'food/milk'));
+    this.itemList.push(new Item('ヨーグルト', 2, 'food/yogurt'));
+    this.itemList.push(new Item('チーズ', 2, 'food/cheese'));
+    this.itemList.push(new Item('卵', 2, 'food/egg'));
+    this.itemList.push(new Item('お米', 2, 'food/rice'));
+    this.itemList.push(new Item('薄力粉', 4, 'food/wheat'));
+    this.itemList.push(new Item('塩', 4, 'food/salt'));
+    this.itemList.push(new Item('砂糖', 4, 'food/suger'));
+    this.itemList.push(new Item('醤油', 4, 'food/soysauce'));
+    this.itemList.push(new Item('味噌', 4, 'food/bottle2'));
+    this.itemList.push(new Item('シャンプー', 5, 'dailygoods/shampoo'));
+    this.itemList.push(new Item('リンス', 5, 'dailygoods/shampoo'));
+    this.itemList.push(new Item('クリーナー', 3, 'dailygoods/corocoro'));
+    // ▲ 0.9.2
+    // ▼ 0.9.2 チュートリアルを追加
+    this.isFirst = true;
+    // ▲ 0.9.2
 };
 
 var Item = function (name, color, image) {
     this.name = name;
     this.color = color;
     this.image = image;
-    this.on = false;
+    this.on = true;
     this.date = '----/--/--';
 };
 
@@ -160,6 +177,8 @@ function movePanel(nextPanel) {
         case 'Config':
             drowConfigColor();
             break;
+        case 'Tutorial':
+            break;
     }
 
     PANEL_LIST.forEach(function (value) {
@@ -276,6 +295,13 @@ function initialize() {
     drowItemGrid();
     drowIconList();
     drowColorList();
+    // ▼ 0.9.2 チュートリアルを追加
+    if (data.isFirst) {
+        data.isFirst = false;
+        getElement('tutorialImg').setAttribute('src', 'img/system/Screen1.png');
+        movePanel('Tutorial');
+    }
+    // ▲ 0.9.2
 }
 
 function pushItem(id) {
@@ -365,7 +391,21 @@ function initColorConfig() {
     drowConfigColor();
 }
 // ▲ 0.9.1
-
-function test() {
-    alert(getElement('config-color').value);
+// ▼ 0.9.2 チュートリアルを追加
+function tutorialImg() {
+    var element = getElement('tutorialImg');
+    if (element.getAttribute('src') == 'img/system/Screen1.png') {
+        element.setAttribute('src', 'img/system/Screen2.png');
+    } else if (element.getAttribute('src') == 'img/system/Screen2.png') {
+        element.setAttribute('src', 'img/system/Screen3.png');
+    } else if (element.getAttribute('src') == 'img/system/Screen3.png') {
+        element.setAttribute('src', 'img/system/Screen5.png');
+    } else if (element.getAttribute('src') == 'img/system/Screen5.png') {
+        element.setAttribute('src', 'img/system/Screen8.png');
+    } else {
+        element.setAttribute('src', 'img/system/Screen0.png');
+        save(data);
+        movePanel('Main');
+    }
 }
+// ▲ 0.9.2
